@@ -19,5 +19,6 @@ def module(name, source):
         __salt__['c_selinux.install_module'](name, source)
         ret['comment'] = "Module {} has been installed".format(name)
 
+    ret['result'] = True
     return ret
 
