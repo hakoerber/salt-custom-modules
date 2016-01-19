@@ -23,16 +23,20 @@ def __virtual__():
 def list_modules():
     output = subprocess.check_output(['semodule', '--list'])
     modules = output.split('\n')
-    print(modules)
     modules = [module and module.split()[0] for module in modules]
     return modules
 
 def install_module(name, source):
     tempdir = tempfile.mkdtemp()
+    log.info("Building in \"{}\".".format(tempdir))
     try:
-        __salt__['cp.get_file'](
+        ret = __salt__['cp.get_url'](
             path=source,
             dest=salt.utils.path_join(tempdir, name + '.te'))
+        if not ret:
+            raise salt.exceptions.CommandExecutionError(
+                'File \"{}\" could not be transferred.'.format(source))
+
 
         for cmd in (
             ('checkmodule', '-M', '-m', '-o', name + '.mod', name + '.te'),
@@ -55,6 +59,7 @@ def install_module(name, source):
                         ret=process.returncode,
                         stdout=stdout, stderr=stderr))
     finally:
-        salt.utils.rm_rf(tempdir)
+        pass
+        #salt.utils.rm_rf(tempdir)
     return True
 
