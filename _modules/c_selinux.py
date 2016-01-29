@@ -28,14 +28,14 @@ def list_modules():
 
 def install_module(name, source):
     tempdir = tempfile.mkdtemp()
-    log.info("Building in \"{}\".".format(tempdir))
+    log.info("Building in \"{0}\".".format(tempdir))
     try:
         ret = __salt__['cp.get_url'](
             path=source,
             dest=salt.utils.path_join(tempdir, name + '.te'))
         if not ret:
             raise salt.exceptions.CommandExecutionError(
-                'File \"{}\" could not be transferred.'.format(source))
+                'File \"{0}\" could not be transferred.'.format(source))
 
 
         for cmd in (
@@ -43,7 +43,7 @@ def install_module(name, source):
             ('semodule_package', '-o', name + '.pp', '-m', name + '.mod'),
             ('semodule', '-i', name + '.pp'),
         ):
-            log.info("Running \"{}\".".format(" ".join(cmd)))
+            log.info("Running \"{0}\".".format(" ".join(cmd)))
             process = subprocess.Popen(
                 args=cmd,
                 stdout=subprocess.PIPE,
