@@ -17,6 +17,7 @@ def module(name, source):
         ret['comment'] = "Module {0} will be installed".format(name)
     else:
         __salt__['c_selinux.install_module'](name, source)
+        ret['changes']['module'] = {'old': '', 'new': name}
         ret['comment'] = "Module {0} has been installed".format(name)
 
     ret['result'] = True
