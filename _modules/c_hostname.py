@@ -13,7 +13,7 @@ def __virtual__():
     return True
 
 def get_hostname():
-    return subprocess.check_output(['hostnamectl', 'status', '--static'])
+    return subprocess.check_output(['hostnamectl', 'status', '--static']).strip()
 
 
 def set_hostname(name):
