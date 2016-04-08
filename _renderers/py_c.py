@@ -107,13 +107,19 @@ def get_interface_of_network(name):
     raise SaltRenderError("No interface found for network {0}.".format(name))
 
 
-def appconf(name):
+def appconf(name, fail_if_not_existent=True):
     """
     Return host specific application configuration
     """
     conf = __pillar__['applications']
     for sub in name.split('.'):
-        conf = conf[sub]
+        try:
+            conf = conf[sub]
+        except KeyError:
+            if fail_if_not_existent:
+                raise
+            else:
+                return {}
     return conf
 
 
